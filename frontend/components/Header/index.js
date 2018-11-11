@@ -6,7 +6,9 @@ const Header = () => (
   <>
     <div className="bar">
       <Link href="/">
-        <a>Result tracker</a>
+        <a>
+          <h1>Result tracker</h1>
+        </a>
       </Link>
     </div>
 

@@ -1,11 +1,13 @@
 import Link from "next/link";
 
+import NavStyled from "./styles";
+
 const Nav = () => (
-  <nav>
+  <NavStyled>
     <Link href="/">
       <a>Home!</a>
     </Link>
-  </nav>
+  </NavStyled>
 );
 
 export default Nav;
