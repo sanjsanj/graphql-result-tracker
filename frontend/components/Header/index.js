@@ -1,16 +1,30 @@
+import NProgress from "nprogress";
+import Router from "next/router";
 import Link from "next/link";
+
+import { LogoStyled } from "./styles";
 
 import Nav from "../Nav";
 
+Router.onRouteChangeStart = () => {
+  NProgress.start();
+}
+Router.onRouteChangeComplete = () => {
+  NProgress.done();
+}
+Router.onRouteChangeError = () => {
+  NProgress.done();
+}
+
 const Header = () => (
   <>
-    <div className="bar">
+    <LogoStyled>
       <Link href="/">
         <a>
-          <h1>Result tracker</h1>
+          <h1>Result Tracker</h1>
         </a>
       </Link>
-    </div>
+    </LogoStyled>
 
     <Nav />
   </>
