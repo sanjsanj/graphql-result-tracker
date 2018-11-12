@@ -14,4 +14,4 @@ function hasPermission(user, permissionsNeeded) {
   }
 }
 
-exports.hasPermission = hasPermission;
+exports = { hasPermission };
