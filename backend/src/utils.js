@@ -1,17 +1,8 @@
-function hasPermission(user, permissionsNeeded) {
-  const matchedPermissions = user.permissions.filter(permissionTheyHave =>
-    permissionsNeeded.includes(permissionTheyHave)
-  );
-  if (!matchedPermissions.length) {
-    throw new Error(`You do not have sufficient permissions
+function checkIfLoggedIn(ctx) {
+  if (!ctx && !ctx.request && !ctx.request.userId)
+    throw new Error("You are not logged in.");
 
-      : ${permissionsNeeded}
-
-      You Have:
-
-      ${user.permissions}
-      `);
-  }
+  return true;
 }
 
-exports = { hasPermission };
+module.exports = { checkIfLoggedIn };
