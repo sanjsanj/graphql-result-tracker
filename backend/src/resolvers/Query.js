@@ -2,7 +2,9 @@ const { checkIfLoggedIn } = require("../utils");
 
 const Query = {
   me(parent, args, ctx, info) {
-    checkIfLoggedIn(ctx);
+    if (!ctx.request.userId) {
+      return null;
+    }
 
     return ctx.db.query.user(
       {

@@ -43,8 +43,7 @@ class Login extends Component {
               onSubmit={async e => {
                 e.preventDefault();
 
-                const res = await login();
-                console.log(res);
+                await login();
 
                 this.setState({
                   password: "",
