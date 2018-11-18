@@ -5,12 +5,10 @@ import gql from "graphql-tag";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
+import { CURRENT_USER_QUERY } from "../User";
 
 const LOGIN_MUTATION = gql`
-  mutation LOGIN_MUTATION(
-    $email: String!
-    $password: String!
-  ) {
+  mutation LOGIN_MUTATION($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       id
       name
@@ -33,7 +31,11 @@ class Login extends Component {
 
   render() {
     return (
-      <Mutation mutation={LOGIN_MUTATION} variables={this.state}>
+      <Mutation
+        mutation={LOGIN_MUTATION}
+        variables={this.state}
+        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+      >
         {(login, { error, loading }) => {
           if (loading) return <p>Loading...</p>;
 

@@ -3,12 +3,19 @@ import Link from "next/link";
 import NavStyled from "./styles";
 
 import User from "../User";
+import Signout from "../Signout";
 
 const Nav = () => (
   <User>
     {({ data: { me } }) => (
       <NavStyled>
-        {me && <div>Hi {me.name}</div>}
+        {me && (
+          <>
+            <div>Hi, {me.name}</div>
+
+            <Signout />
+          </>
+        )}
 
         {!me && (
           <>
