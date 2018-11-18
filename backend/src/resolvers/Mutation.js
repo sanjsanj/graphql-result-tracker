@@ -138,14 +138,19 @@ const Mutation = {
       where: { id: ctx.request.userId }
     });
 
-    if (!challenger) throw new Error("Challenger does not exist");
+    if (!challenger)
+      throw new Error(`Challenger does not exist ${process.env.FRONTEND_URL}`);
 
     const participant = await ctx.db.query.user({
       where: { email: args.participantEmail }
     });
 
     if (!participant)
-      throw new Error("The person you are challenging does not exist");
+      throw new Error(
+        `The person you are challenging does not exist on ${
+          process.env.FRONTEND_URL
+        }`
+      );
 
     return ctx.db.mutation.createChallenge(
       {

@@ -13,6 +13,10 @@ const Nav = () => (
           <>
             <div>Hi, {me.name}</div>
 
+            <Link href="/challenge">
+              <a>Challenge a friend</a>
+            </Link>
+
             <Signout />
           </>
         )}
