@@ -1,5 +1,13 @@
 # source: https://eu1.prisma.sh/sanjay-purswani-f61b81/result-tracker-backend/dev
-# timestamp: Tue Nov 13 2018 20:02:12 GMT+0000 (Greenwich Mean Time)
+# timestamp: Sun Nov 18 2018 19:22:58 GMT+0000 (Greenwich Mean Time)
+
+type AggregateChallenge {
+  count: Int!
+}
+
+type AggregateResult {
+  count: Int!
+}
 
 type AggregateUser {
   count: Int!
@@ -10,6 +18,440 @@ type BatchPayload {
   count: Long!
 }
 
+type Challenge implements Node {
+  id: ID!
+  title: String!
+  user: User!
+  participant: User!
+  results(where: ResultWhereInput, orderBy: ResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Result!]
+  goal: Int!
+}
+
+"""A connection to a list of items."""
+type ChallengeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ChallengeEdge]!
+  aggregate: AggregateChallenge!
+}
+
+input ChallengeCreateInput {
+  title: String!
+  goal: Int!
+  user: UserCreateOneWithoutChallengesCreatedInput!
+  participant: UserCreateOneWithoutChallengesParticipatingInput!
+  results: ResultCreateManyInput
+}
+
+input ChallengeCreateManyWithoutParticipantInput {
+  create: [ChallengeCreateWithoutParticipantInput!]
+  connect: [ChallengeWhereUniqueInput!]
+}
+
+input ChallengeCreateManyWithoutUserInput {
+  create: [ChallengeCreateWithoutUserInput!]
+  connect: [ChallengeWhereUniqueInput!]
+}
+
+input ChallengeCreateWithoutParticipantInput {
+  title: String!
+  goal: Int!
+  user: UserCreateOneWithoutChallengesCreatedInput!
+  results: ResultCreateManyInput
+}
+
+input ChallengeCreateWithoutUserInput {
+  title: String!
+  goal: Int!
+  participant: UserCreateOneWithoutChallengesParticipatingInput!
+  results: ResultCreateManyInput
+}
+
+"""An edge in a connection."""
+type ChallengeEdge {
+  """The item at the end of the edge."""
+  node: Challenge!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ChallengeOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  goal_ASC
+  goal_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ChallengePreviousValues {
+  id: ID!
+  title: String!
+  goal: Int!
+}
+
+input ChallengeScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ChallengeScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ChallengeScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ChallengeScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  goal: Int
+
+  """All values that are not equal to given value."""
+  goal_not: Int
+
+  """All values that are contained in given list."""
+  goal_in: [Int!]
+
+  """All values that are not contained in given list."""
+  goal_not_in: [Int!]
+
+  """All values less than the given value."""
+  goal_lt: Int
+
+  """All values less than or equal the given value."""
+  goal_lte: Int
+
+  """All values greater than the given value."""
+  goal_gt: Int
+
+  """All values greater than or equal the given value."""
+  goal_gte: Int
+}
+
+type ChallengeSubscriptionPayload {
+  mutation: MutationType!
+  node: Challenge
+  updatedFields: [String!]
+  previousValues: ChallengePreviousValues
+}
+
+input ChallengeSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ChallengeSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ChallengeSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ChallengeSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ChallengeWhereInput
+}
+
+input ChallengeUpdateInput {
+  title: String
+  goal: Int
+  user: UserUpdateOneRequiredWithoutChallengesCreatedInput
+  participant: UserUpdateOneRequiredWithoutChallengesParticipatingInput
+  results: ResultUpdateManyInput
+}
+
+input ChallengeUpdateManyDataInput {
+  title: String
+  goal: Int
+}
+
+input ChallengeUpdateManyMutationInput {
+  title: String
+  goal: Int
+}
+
+input ChallengeUpdateManyWithoutParticipantInput {
+  create: [ChallengeCreateWithoutParticipantInput!]
+  connect: [ChallengeWhereUniqueInput!]
+  disconnect: [ChallengeWhereUniqueInput!]
+  delete: [ChallengeWhereUniqueInput!]
+  update: [ChallengeUpdateWithWhereUniqueWithoutParticipantInput!]
+  updateMany: [ChallengeUpdateManyWithWhereNestedInput!]
+  deleteMany: [ChallengeScalarWhereInput!]
+  upsert: [ChallengeUpsertWithWhereUniqueWithoutParticipantInput!]
+}
+
+input ChallengeUpdateManyWithoutUserInput {
+  create: [ChallengeCreateWithoutUserInput!]
+  connect: [ChallengeWhereUniqueInput!]
+  disconnect: [ChallengeWhereUniqueInput!]
+  delete: [ChallengeWhereUniqueInput!]
+  update: [ChallengeUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [ChallengeUpdateManyWithWhereNestedInput!]
+  deleteMany: [ChallengeScalarWhereInput!]
+  upsert: [ChallengeUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input ChallengeUpdateManyWithWhereNestedInput {
+  where: ChallengeScalarWhereInput!
+  data: ChallengeUpdateManyDataInput!
+}
+
+input ChallengeUpdateWithoutParticipantDataInput {
+  title: String
+  goal: Int
+  user: UserUpdateOneRequiredWithoutChallengesCreatedInput
+  results: ResultUpdateManyInput
+}
+
+input ChallengeUpdateWithoutUserDataInput {
+  title: String
+  goal: Int
+  participant: UserUpdateOneRequiredWithoutChallengesParticipatingInput
+  results: ResultUpdateManyInput
+}
+
+input ChallengeUpdateWithWhereUniqueWithoutParticipantInput {
+  where: ChallengeWhereUniqueInput!
+  data: ChallengeUpdateWithoutParticipantDataInput!
+}
+
+input ChallengeUpdateWithWhereUniqueWithoutUserInput {
+  where: ChallengeWhereUniqueInput!
+  data: ChallengeUpdateWithoutUserDataInput!
+}
+
+input ChallengeUpsertWithWhereUniqueWithoutParticipantInput {
+  where: ChallengeWhereUniqueInput!
+  update: ChallengeUpdateWithoutParticipantDataInput!
+  create: ChallengeCreateWithoutParticipantInput!
+}
+
+input ChallengeUpsertWithWhereUniqueWithoutUserInput {
+  where: ChallengeWhereUniqueInput!
+  update: ChallengeUpdateWithoutUserDataInput!
+  create: ChallengeCreateWithoutUserInput!
+}
+
+input ChallengeWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ChallengeWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ChallengeWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ChallengeWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  goal: Int
+
+  """All values that are not equal to given value."""
+  goal_not: Int
+
+  """All values that are contained in given list."""
+  goal_in: [Int!]
+
+  """All values that are not contained in given list."""
+  goal_not_in: [Int!]
+
+  """All values less than the given value."""
+  goal_lt: Int
+
+  """All values less than or equal the given value."""
+  goal_lte: Int
+
+  """All values greater than the given value."""
+  goal_gt: Int
+
+  """All values greater than or equal the given value."""
+  goal_gte: Int
+  user: UserWhereInput
+  participant: UserWhereInput
+  results_every: ResultWhereInput
+  results_some: ResultWhereInput
+  results_none: ResultWhereInput
+}
+
+input ChallengeWhereUniqueInput {
+  id: ID
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -18,11 +460,20 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createChallenge(data: ChallengeCreateInput!): Challenge!
+  createResult: Result!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateChallenge(data: ChallengeUpdateInput!, where: ChallengeWhereUniqueInput!): Challenge
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteChallenge(where: ChallengeWhereUniqueInput!): Challenge
+  deleteResult(where: ResultWhereUniqueInput!): Result
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertChallenge(where: ChallengeWhereUniqueInput!, create: ChallengeCreateInput!, update: ChallengeUpdateInput!): Challenge!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyChallenges(data: ChallengeUpdateManyMutationInput!, where: ChallengeWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyChallenges(where: ChallengeWhereInput): BatchPayload!
+  deleteManyResults(where: ResultWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -54,8 +505,14 @@ type PageInfo {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  challenges(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Challenge]!
+  results(where: ResultWhereInput, orderBy: ResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Result]!
   user(where: UserWhereUniqueInput!): User
+  challenge(where: ChallengeWhereUniqueInput!): Challenge
+  result(where: ResultWhereUniqueInput!): Result
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  challengesConnection(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ChallengeConnection!
+  resultsConnection(where: ResultWhereInput, orderBy: ResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResultConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -64,8 +521,202 @@ type Query {
   ): Node
 }
 
+type Result implements Node {
+  id: ID!
+}
+
+"""A connection to a list of items."""
+type ResultConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ResultEdge]!
+  aggregate: AggregateResult!
+}
+
+input ResultCreateManyInput {
+  connect: [ResultWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type ResultEdge {
+  """The item at the end of the edge."""
+  node: Result!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ResultOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ResultPreviousValues {
+  id: ID!
+}
+
+input ResultScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResultScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResultScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResultScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+}
+
+type ResultSubscriptionPayload {
+  mutation: MutationType!
+  node: Result
+  updatedFields: [String!]
+  previousValues: ResultPreviousValues
+}
+
+input ResultSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResultSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResultSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResultSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ResultWhereInput
+}
+
+input ResultUpdateManyInput {
+  connect: [ResultWhereUniqueInput!]
+  disconnect: [ResultWhereUniqueInput!]
+  delete: [ResultWhereUniqueInput!]
+  deleteMany: [ResultScalarWhereInput!]
+}
+
+input ResultWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ResultWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ResultWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ResultWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+}
+
+input ResultWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  challenge(where: ChallengeSubscriptionWhereInput): ChallengeSubscriptionPayload
+  result(where: ResultSubscriptionWhereInput): ResultSubscriptionPayload
 }
 
 type User implements Node {
@@ -75,6 +726,8 @@ type User implements Node {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
+  challengesCreated(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Challenge!]
+  challengesParticipating(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Challenge!]
 }
 
 """A connection to a list of items."""
@@ -93,6 +746,36 @@ input UserCreateInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
+  challengesCreated: ChallengeCreateManyWithoutUserInput
+  challengesParticipating: ChallengeCreateManyWithoutParticipantInput
+}
+
+input UserCreateOneWithoutChallengesCreatedInput {
+  create: UserCreateWithoutChallengesCreatedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutChallengesParticipatingInput {
+  create: UserCreateWithoutChallengesParticipatingInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutChallengesCreatedInput {
+  name: String!
+  email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  challengesParticipating: ChallengeCreateManyWithoutParticipantInput
+}
+
+input UserCreateWithoutChallengesParticipatingInput {
+  name: String!
+  email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  challengesCreated: ChallengeCreateManyWithoutUserInput
 }
 
 """An edge in a connection."""
@@ -177,6 +860,8 @@ input UserUpdateInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
+  challengesCreated: ChallengeUpdateManyWithoutUserInput
+  challengesParticipating: ChallengeUpdateManyWithoutParticipantInput
 }
 
 input UserUpdateManyMutationInput {
@@ -185,6 +870,48 @@ input UserUpdateManyMutationInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
+}
+
+input UserUpdateOneRequiredWithoutChallengesCreatedInput {
+  create: UserCreateWithoutChallengesCreatedInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutChallengesCreatedDataInput
+  upsert: UserUpsertWithoutChallengesCreatedInput
+}
+
+input UserUpdateOneRequiredWithoutChallengesParticipatingInput {
+  create: UserCreateWithoutChallengesParticipatingInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutChallengesParticipatingDataInput
+  upsert: UserUpsertWithoutChallengesParticipatingInput
+}
+
+input UserUpdateWithoutChallengesCreatedDataInput {
+  name: String
+  email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  challengesParticipating: ChallengeUpdateManyWithoutParticipantInput
+}
+
+input UserUpdateWithoutChallengesParticipatingDataInput {
+  name: String
+  email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  challengesCreated: ChallengeUpdateManyWithoutUserInput
+}
+
+input UserUpsertWithoutChallengesCreatedInput {
+  update: UserUpdateWithoutChallengesCreatedDataInput!
+  create: UserCreateWithoutChallengesCreatedInput!
+}
+
+input UserUpsertWithoutChallengesParticipatingInput {
+  update: UserUpdateWithoutChallengesParticipatingDataInput!
+  create: UserCreateWithoutChallengesParticipatingInput!
 }
 
 input UserWhereInput {
@@ -418,6 +1145,12 @@ input UserWhereInput {
 
   """All values greater than or equal the given value."""
   resetTokenExpiry_gte: Float
+  challengesCreated_every: ChallengeWhereInput
+  challengesCreated_some: ChallengeWhereInput
+  challengesCreated_none: ChallengeWhereInput
+  challengesParticipating_every: ChallengeWhereInput
+  challengesParticipating_some: ChallengeWhereInput
+  challengesParticipating_none: ChallengeWhereInput
 }
 
 input UserWhereUniqueInput {

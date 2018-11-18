@@ -4,6 +4,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 
 const { transport, emailTemplate } = require("../mail");
+const { checkIfLoggedIn } = require("../utils");
 
 const Mutation = {
   async signup(parent, args, ctx, info) {
@@ -128,6 +129,43 @@ const Mutation = {
     });
 
     return updatedUser;
+  },
+
+  async createChallenge(parent, args, ctx, info) {
+    checkIfLoggedIn(ctx);
+
+    const challenger = await ctx.db.query.user({
+      where: { id: ctx.request.userId }
+    });
+
+    if (!challenger) throw new Error("Challenger does not exist");
+
+    const participant = await ctx.db.query.user({
+      where: { email: args.participantEmail }
+    });
+
+    if (!participant)
+      throw new Error("The person you are challenging does not exist");
+
+    return ctx.db.mutation.createChallenge(
+      {
+        data: {
+          user: {
+            connect: {
+              id: ctx.request.userId
+            }
+          },
+          participant: {
+            connect: {
+              email: args.participantEmail
+            }
+          },
+          title: args.title,
+          goal: args.goal
+        }
+      },
+      info
+    );
   }
 };
 

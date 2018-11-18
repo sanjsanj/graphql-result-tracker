@@ -5,4 +5,21 @@ type User {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
+  challengesCreated: [Challenge!]!
+    @relation(name: "ChallengeCreator")
+  challengesParticipating: [Challenge!]!
+    @relation(name: "ChallengeParticipant")
+}
+
+type Challenge {
+  id: ID! @unique
+  title: String!
+  user: User! @relation(name: "ChallengeCreator")
+  participant: User! @relation(name: "ChallengeParticipant")
+  results: [Result!]!
+  goal: Int!
+}
+
+type Result {
+  id: ID! @unique
 }
