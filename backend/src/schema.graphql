@@ -10,6 +10,8 @@ type Mutation {
   signin(email: String!, password: String!): User
 
   signout: SuccessMessage
+
+  requestReset(email: String!): SuccessMessage
 }
 
 type Query {

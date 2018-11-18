@@ -58,6 +58,25 @@ const Mutation = {
     ctx.response.clearCookie("token");
 
     return { message: "Signed out" };
+  },
+
+  async requestReset(parent, { email }, ctx, info) {
+    email = email.toLowerCase();
+
+    const user = await ctx.db.query.user({ where: { email } });
+
+    if (!user) throw new Error(`No user found for email ${email}`);
+
+    const randomBytesPromise = await promisify(randomBytes)(20);
+    const resetToken = randomBytesPromise.toString("hex");
+    const resetTokenExpiry = Date.now() + 3600000;
+
+    await ctx.db.mutation.updateUser({
+      where: { email },
+      data: { resetToken, resetTokenExpiry }
+    });
+
+    return { message: "Password reset email sent" };
   }
 };
 

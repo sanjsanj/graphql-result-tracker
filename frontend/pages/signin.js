@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import Signin from "../components/Signin";
+import RequestReset from "../components/RequestReset";
 
 const Columns = styled.div`
   display: grid;
@@ -12,8 +13,9 @@ const SigninPage = () => {
   return (
     <Columns>
       <Signin />
+      <RequestReset />
     </Columns>
-  )
-}
+  );
+};
 
 export default SigninPage;
