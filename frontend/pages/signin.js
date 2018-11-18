@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Login from "../components/Login";
+import Signin from "../components/Signin";
 
 const Columns = styled.div`
   display: grid;
@@ -8,12 +8,12 @@ const Columns = styled.div`
   grid-gap: 20px;
 `;
 
-const LoginPage = () => {
+const SigninPage = () => {
   return (
     <Columns>
-      <Login />
+      <Signin />
     </Columns>
   )
 }
 
-export default LoginPage;
+export default SigninPage;

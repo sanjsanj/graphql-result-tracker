@@ -7,9 +7,9 @@ import FormStyled from "../Form/styles";
 import Error from "../Error";
 import { CURRENT_USER_QUERY } from "../User";
 
-const LOGIN_MUTATION = gql`
-  mutation LOGIN_MUTATION($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
       id
       name
       email
@@ -17,7 +17,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-class Login extends Component {
+class Signin extends Component {
   state = {
     password: "",
     email: ""
@@ -32,11 +32,11 @@ class Login extends Component {
   render() {
     return (
       <Mutation
-        mutation={LOGIN_MUTATION}
+        mutation={SIGNIN_MUTATION}
         variables={this.state}
         refetchQueries={[{ query: CURRENT_USER_QUERY }]}
       >
-        {(login, { error, loading }) => {
+        {(signin, { error, loading }) => {
           if (loading) return <p>Loading...</p>;
 
           return (
@@ -45,7 +45,7 @@ class Login extends Component {
               onSubmit={async e => {
                 e.preventDefault();
 
-                await login();
+                await signin();
 
                 this.setState({
                   password: "",
@@ -87,4 +87,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default Signin;

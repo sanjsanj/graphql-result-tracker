@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
+import { CURRENT_USER_QUERY } from "../User";
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(

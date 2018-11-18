@@ -23,8 +23,8 @@ const Nav = () => (
               <a>Signup</a>
             </Link>
 
-            <Link href="/login">
-              <a>Login</a>
+            <Link href="/signin">
+              <a>Signin</a>
             </Link>
           </>
         )}

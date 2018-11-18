@@ -29,7 +29,7 @@ const Mutation = {
     return user;
   },
 
-  async login(parent, { email, password }, ctx, info) {
+  async signin(parent, { email, password }, ctx, info) {
     email = email.toLowerCase();
 
     const user = await ctx.db.query.user({

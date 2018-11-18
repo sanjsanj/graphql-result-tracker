@@ -7,7 +7,7 @@ type SuccessMessage {
 type Mutation {
   signup(name: String!, email: String!, password: String!): User!
 
-  login(email: String!, password: String!): User
+  signin(email: String!, password: String!): User
 
   signout: SuccessMessage
 }
