@@ -1,6 +1,7 @@
 import React from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import Router from "next/router";
 
 import { CURRENT_USER_QUERY } from "../User";
 
@@ -14,6 +15,10 @@ const SIGNOUT_MUTATION = gql`
 
 const handleConfirm = fn => {
   if (window.confirm("Are you sure you want to sign out?")) fn();
+
+  Router.push({
+    pathname: "/"
+  });
 };
 
 const Signout = () => (

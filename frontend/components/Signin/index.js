@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import Router from "next/router";
 
 import FormStyled from "../Form/styles";
 
@@ -50,6 +51,10 @@ class Signin extends Component {
                 this.setState({
                   password: "",
                   email: ""
+                });
+
+                Router.push({
+                  pathname: "/"
                 });
               }}
             >
