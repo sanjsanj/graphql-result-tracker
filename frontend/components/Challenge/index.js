@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Router from "next/router";
+import styled from "styled-components";
 
 import FormStyled from "../Form/styles";
 
@@ -21,6 +22,12 @@ const CREATE_CHALLENGE_MUTATION = gql`
       id
     }
   }
+`;
+
+const InputSpanStyled = styled.input`
+  display: inline-block;
+  width: 50px !important;
+  margin: 0 10px;
 `;
 
 class Challenge extends Component {
@@ -89,13 +96,14 @@ class Challenge extends Component {
                 </label>
 
                 <label htmlFor="goal">
-                  Winner is first to this many wins
-                  <input
+                  Winner is the first to
+                  <InputSpanStyled
                     type="number"
                     name="goal"
                     value={this.state.goal}
                     onChange={this.saveToState}
                   />
+                  wins
                 </label>
 
                 <button type="submit">Challenge</button>
