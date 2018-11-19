@@ -21,7 +21,7 @@ const ALL_USER_CHALLENGES_QUERY = gql`
   }
 `;
 
-const TeasersStyled = styled.div`
+const TeaserContainerStyled = styled.div`
   display: flex;
   flex-direction: row;
   flex-flow: row wrap;
@@ -40,14 +40,14 @@ const Home = () => (
                 if (error) return <Error error={error} />;
 
                 return (
-                  <TeasersStyled>
+                  <TeaserContainerStyled>
                     {data.challenges.map(challenge => (
                       <ChallengeTeaser
                         key={challenge.id}
                         challenge={challenge}
                       />
                     ))}
-                  </TeasersStyled>
+                  </TeaserContainerStyled>
                 );
               }}
             </Query>

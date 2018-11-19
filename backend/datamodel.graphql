@@ -5,10 +5,8 @@ type User {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  challengesCreated: [Challenge!]!
-    @relation(name: "ChallengeCreator")
-  challengesParticipating: [Challenge!]!
-    @relation(name: "ChallengeParticipant")
+  challengesCreated: [Challenge!]! @relation(name: "ChallengeCreator")
+  challengesParticipating: [Challenge!]! @relation(name: "ChallengeParticipant")
 }
 
 type Challenge {
@@ -22,4 +20,9 @@ type Challenge {
 
 type Result {
   id: ID! @unique
+  challenge: Challenge!
+  createdBy: User! @relation(name: "CreatedBy")
+  createdAt: DateTime!
+  winner: User! @relation(name: "Winner")
+  loser: User! @relation(name: "Loser")
 }

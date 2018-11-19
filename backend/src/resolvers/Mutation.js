@@ -166,6 +166,49 @@ const Mutation = {
       },
       info
     );
+  },
+
+  async createResult(parent, args, ctx, info) {
+    checkIfLoggedIn(ctx);
+
+    const user = await ctx.db.query.user({
+      where: {
+        id: ctx.request.userId
+      }
+    });
+
+    if (!user) throw new Error("User does not exist")
+
+    const winner = await ctx.db.query.user({
+      where: {
+        id: args.winnerId
+      }
+    });
+
+    if (!winner) throw new Error("Winner does not exist")
+
+    const loser = await ctx.db.query.user({
+      where: {
+        id: args.loserId
+      }
+    });
+
+    if (!loser) throw new Error("Loser does not exist")
+
+    const result = await ctx.db.mutation.createResult(
+      {
+        data: {
+          challenge: { connect: { id: args.challengeId } },
+          createdBy: { connect: { id: ctx.request.userId } },
+          winner: { connect: { id: args.winnerId } },
+          loser: { connect: { id: args.loserId } }
+        }
+      },
+      info
+    );
+
+    console.log(result);
+    return result;
   }
 };
 

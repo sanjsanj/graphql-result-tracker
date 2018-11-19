@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/sanjay-purswani-f61b81/result-tracker-backend/dev
-# timestamp: Sun Nov 18 2018 19:22:58 GMT+0000 (Greenwich Mean Time)
+# timestamp: Mon Nov 19 2018 18:12:13 GMT+0000 (Greenwich Mean Time)
 
 type AggregateChallenge {
   count: Int!
@@ -42,7 +42,7 @@ input ChallengeCreateInput {
   goal: Int!
   user: UserCreateOneWithoutChallengesCreatedInput!
   participant: UserCreateOneWithoutChallengesParticipatingInput!
-  results: ResultCreateManyInput
+  results: ResultCreateManyWithoutChallengeInput
 }
 
 input ChallengeCreateManyWithoutParticipantInput {
@@ -55,18 +55,30 @@ input ChallengeCreateManyWithoutUserInput {
   connect: [ChallengeWhereUniqueInput!]
 }
 
+input ChallengeCreateOneWithoutResultsInput {
+  create: ChallengeCreateWithoutResultsInput
+  connect: ChallengeWhereUniqueInput
+}
+
 input ChallengeCreateWithoutParticipantInput {
   title: String!
   goal: Int!
   user: UserCreateOneWithoutChallengesCreatedInput!
-  results: ResultCreateManyInput
+  results: ResultCreateManyWithoutChallengeInput
+}
+
+input ChallengeCreateWithoutResultsInput {
+  title: String!
+  goal: Int!
+  user: UserCreateOneWithoutChallengesCreatedInput!
+  participant: UserCreateOneWithoutChallengesParticipatingInput!
 }
 
 input ChallengeCreateWithoutUserInput {
   title: String!
   goal: Int!
   participant: UserCreateOneWithoutChallengesParticipatingInput!
-  results: ResultCreateManyInput
+  results: ResultCreateManyWithoutChallengeInput
 }
 
 """An edge in a connection."""
@@ -254,7 +266,7 @@ input ChallengeUpdateInput {
   goal: Int
   user: UserUpdateOneRequiredWithoutChallengesCreatedInput
   participant: UserUpdateOneRequiredWithoutChallengesParticipatingInput
-  results: ResultUpdateManyInput
+  results: ResultUpdateManyWithoutChallengeInput
 }
 
 input ChallengeUpdateManyDataInput {
@@ -294,18 +306,32 @@ input ChallengeUpdateManyWithWhereNestedInput {
   data: ChallengeUpdateManyDataInput!
 }
 
+input ChallengeUpdateOneRequiredWithoutResultsInput {
+  create: ChallengeCreateWithoutResultsInput
+  connect: ChallengeWhereUniqueInput
+  update: ChallengeUpdateWithoutResultsDataInput
+  upsert: ChallengeUpsertWithoutResultsInput
+}
+
 input ChallengeUpdateWithoutParticipantDataInput {
   title: String
   goal: Int
   user: UserUpdateOneRequiredWithoutChallengesCreatedInput
-  results: ResultUpdateManyInput
+  results: ResultUpdateManyWithoutChallengeInput
+}
+
+input ChallengeUpdateWithoutResultsDataInput {
+  title: String
+  goal: Int
+  user: UserUpdateOneRequiredWithoutChallengesCreatedInput
+  participant: UserUpdateOneRequiredWithoutChallengesParticipatingInput
 }
 
 input ChallengeUpdateWithoutUserDataInput {
   title: String
   goal: Int
   participant: UserUpdateOneRequiredWithoutChallengesParticipatingInput
-  results: ResultUpdateManyInput
+  results: ResultUpdateManyWithoutChallengeInput
 }
 
 input ChallengeUpdateWithWhereUniqueWithoutParticipantInput {
@@ -316,6 +342,11 @@ input ChallengeUpdateWithWhereUniqueWithoutParticipantInput {
 input ChallengeUpdateWithWhereUniqueWithoutUserInput {
   where: ChallengeWhereUniqueInput!
   data: ChallengeUpdateWithoutUserDataInput!
+}
+
+input ChallengeUpsertWithoutResultsInput {
+  update: ChallengeUpdateWithoutResultsDataInput!
+  create: ChallengeCreateWithoutResultsInput!
 }
 
 input ChallengeUpsertWithWhereUniqueWithoutParticipantInput {
@@ -452,6 +483,8 @@ input ChallengeWhereUniqueInput {
   id: ID
 }
 
+scalar DateTime
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -459,21 +492,23 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
   createChallenge(data: ChallengeCreateInput!): Challenge!
-  createResult: Result!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  createResult(data: ResultCreateInput!): Result!
+  createUser(data: UserCreateInput!): User!
   updateChallenge(data: ChallengeUpdateInput!, where: ChallengeWhereUniqueInput!): Challenge
-  deleteUser(where: UserWhereUniqueInput!): User
+  updateResult(data: ResultUpdateInput!, where: ResultWhereUniqueInput!): Result
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteChallenge(where: ChallengeWhereUniqueInput!): Challenge
   deleteResult(where: ResultWhereUniqueInput!): Result
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertChallenge(where: ChallengeWhereUniqueInput!, create: ChallengeCreateInput!, update: ChallengeUpdateInput!): Challenge!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertResult(where: ResultWhereUniqueInput!, create: ResultCreateInput!, update: ResultUpdateInput!): Result!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyChallenges(data: ChallengeUpdateManyMutationInput!, where: ChallengeWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyChallenges(where: ChallengeWhereInput): BatchPayload!
   deleteManyResults(where: ResultWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -504,15 +539,15 @@ type PageInfo {
 }
 
 type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   challenges(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Challenge]!
   results(where: ResultWhereInput, orderBy: ResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Result]!
-  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   challenge(where: ChallengeWhereUniqueInput!): Challenge
   result(where: ResultWhereUniqueInput!): Result
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  user(where: UserWhereUniqueInput!): User
   challengesConnection(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ChallengeConnection!
   resultsConnection(where: ResultWhereInput, orderBy: ResultOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResultConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -523,6 +558,11 @@ type Query {
 
 type Result implements Node {
   id: ID!
+  challenge: Challenge!
+  createdBy: User!
+  createdAt: DateTime!
+  winner: User!
+  loser: User!
 }
 
 """A connection to a list of items."""
@@ -535,8 +575,22 @@ type ResultConnection {
   aggregate: AggregateResult!
 }
 
-input ResultCreateManyInput {
+input ResultCreateInput {
+  challenge: ChallengeCreateOneWithoutResultsInput!
+  createdBy: UserCreateOneInput!
+  winner: UserCreateOneInput!
+  loser: UserCreateOneInput!
+}
+
+input ResultCreateManyWithoutChallengeInput {
+  create: [ResultCreateWithoutChallengeInput!]
   connect: [ResultWhereUniqueInput!]
+}
+
+input ResultCreateWithoutChallengeInput {
+  createdBy: UserCreateOneInput!
+  winner: UserCreateOneInput!
+  loser: UserCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -551,14 +605,15 @@ type ResultEdge {
 enum ResultOrderByInput {
   id_ASC
   id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ResultPreviousValues {
   id: ID!
+  createdAt: DateTime!
 }
 
 input ResultScalarWhereInput {
@@ -610,6 +665,28 @@ input ResultScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
 }
 
 type ResultSubscriptionPayload {
@@ -651,11 +728,38 @@ input ResultSubscriptionWhereInput {
   node: ResultWhereInput
 }
 
-input ResultUpdateManyInput {
+input ResultUpdateInput {
+  challenge: ChallengeUpdateOneRequiredWithoutResultsInput
+  createdBy: UserUpdateOneRequiredInput
+  winner: UserUpdateOneRequiredInput
+  loser: UserUpdateOneRequiredInput
+}
+
+input ResultUpdateManyWithoutChallengeInput {
+  create: [ResultCreateWithoutChallengeInput!]
   connect: [ResultWhereUniqueInput!]
   disconnect: [ResultWhereUniqueInput!]
   delete: [ResultWhereUniqueInput!]
+  update: [ResultUpdateWithWhereUniqueWithoutChallengeInput!]
   deleteMany: [ResultScalarWhereInput!]
+  upsert: [ResultUpsertWithWhereUniqueWithoutChallengeInput!]
+}
+
+input ResultUpdateWithoutChallengeDataInput {
+  createdBy: UserUpdateOneRequiredInput
+  winner: UserUpdateOneRequiredInput
+  loser: UserUpdateOneRequiredInput
+}
+
+input ResultUpdateWithWhereUniqueWithoutChallengeInput {
+  where: ResultWhereUniqueInput!
+  data: ResultUpdateWithoutChallengeDataInput!
+}
+
+input ResultUpsertWithWhereUniqueWithoutChallengeInput {
+  where: ResultWhereUniqueInput!
+  update: ResultUpdateWithoutChallengeDataInput!
+  create: ResultCreateWithoutChallengeInput!
 }
 
 input ResultWhereInput {
@@ -707,6 +811,32 @@ input ResultWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  challenge: ChallengeWhereInput
+  createdBy: UserWhereInput
+  winner: UserWhereInput
+  loser: UserWhereInput
 }
 
 input ResultWhereUniqueInput {
@@ -714,9 +844,9 @@ input ResultWhereUniqueInput {
 }
 
 type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   challenge(where: ChallengeSubscriptionWhereInput): ChallengeSubscriptionPayload
   result(where: ResultSubscriptionWhereInput): ResultSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type User implements Node {
@@ -748,6 +878,11 @@ input UserCreateInput {
   resetTokenExpiry: Float
   challengesCreated: ChallengeCreateManyWithoutUserInput
   challengesParticipating: ChallengeCreateManyWithoutParticipantInput
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutChallengesCreatedInput {
@@ -854,6 +989,16 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateDataInput {
+  name: String
+  email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  challengesCreated: ChallengeUpdateManyWithoutUserInput
+  challengesParticipating: ChallengeUpdateManyWithoutParticipantInput
+}
+
 input UserUpdateInput {
   name: String
   email: String
@@ -870,6 +1015,13 @@ input UserUpdateManyMutationInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
+}
+
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
 }
 
 input UserUpdateOneRequiredWithoutChallengesCreatedInput {
@@ -902,6 +1054,11 @@ input UserUpdateWithoutChallengesParticipatingDataInput {
   resetToken: String
   resetTokenExpiry: Float
   challengesCreated: ChallengeUpdateManyWithoutUserInput
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithoutChallengesCreatedInput {
