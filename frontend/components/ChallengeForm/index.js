@@ -7,6 +7,7 @@ import styled from "styled-components";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
+import { ALL_USER_CHALLENGES_QUERY } from "../../pages";
 
 const CREATE_CHALLENGE_MUTATION = gql`
   mutation CREATE_CHALLENGE_MUTATION(
@@ -45,7 +46,11 @@ class ChallengeForm extends Component {
 
   render() {
     return (
-      <Mutation mutation={CREATE_CHALLENGE_MUTATION} variables={this.state}>
+      <Mutation
+        mutation={CREATE_CHALLENGE_MUTATION}
+        variables={this.state}
+        refetchQueries={[{ query: ALL_USER_CHALLENGES_QUERY }]}
+      >
         {(createChallenge, { error, loading }) => {
           if (loading) return <p>Loading...</p>;
 
@@ -62,12 +67,11 @@ class ChallengeForm extends Component {
                   title: "",
                   goal: 3
                 });
-                console.log(res.data);
 
-                // Router.push({
-                //   pathname: "/challenge",
-                //   query: { id: res.data.createChallenge.id }
-                // });
+                Router.push({
+                  pathname: "/challenge",
+                  query: { id: res.data.createChallenge.id }
+                });
               }}
             >
               <fieldset disabled={loading} aria-busy={loading}>

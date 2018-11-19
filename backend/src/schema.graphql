@@ -36,4 +36,6 @@ type Query {
   me: User
 
   challenge(id: ID!): Challenge
+
+  challenges: [Challenge]!
 }

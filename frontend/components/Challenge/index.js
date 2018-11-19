@@ -47,9 +47,9 @@ const Challenge = props => (
         <>
           <h2>{challenge.title}</h2>
           <p>
-            {challenge.user.name} vs {challenge.participant.name}
+            <b>{challenge.user.name}</b> vs <b>{challenge.participant.name}</b>
           </p>
-          <p>First to {challenge.goal} wins!</p>
+          <p>First to <b>{challenge.goal}</b> wins!</p>
         </>
       );
     }}

@@ -39,6 +39,28 @@ const Query = {
       throw new Error("You are not participating in this challenge");
 
     return challenge;
+  },
+
+  async challenges(parent, args, ctx, info) {
+    checkIfLoggedIn(ctx);
+
+    const challenges = await ctx.db.query.challenges(
+      {
+        where: {
+          OR: [
+            {
+              user: { id: ctx.request.userId }
+            },
+            {
+              participant: { id: ctx.request.userId }
+            }
+          ]
+        }
+      },
+      info
+    );
+
+    return challenges;
   }
 };
 
