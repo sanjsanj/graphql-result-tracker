@@ -17,6 +17,8 @@ const Query = {
   },
 
   async challenge(parent, args, ctx, info) {
+    checkIfLoggedIn(ctx);
+
     const challenge = await ctx.db.query.challenge(
       {
         where: {
@@ -26,7 +28,15 @@ const Query = {
       info
     );
 
-    if (!challenge) throw new Error("Oops! That challenge does not exist")
+    if (!challenge) throw new Error("Oops! That challenge does not exist");
+
+    const canAccessChallenge = [
+      challenge.user.id,
+      challenge.participant.id
+    ].some(val => val === ctx.request.userId);
+
+    if (!canAccessChallenge)
+      throw new Error("You are not participating in this challenge");
 
     return challenge;
   }

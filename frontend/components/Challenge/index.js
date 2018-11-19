@@ -15,14 +15,12 @@ const SINGLE_CHALLENGE_QUERY = gql`
       #   id
       # }
       user {
-        # id
+        id
         name
-        # email
       }
       participant {
-        # id
+        id
         name
-        # email
       }
     }
   }
@@ -57,15 +55,5 @@ const Challenge = props => (
     }}
   </Composed>
 );
-
-// class Challenge extends React.Component {
-//   render() {
-//     return (
-//       <Composed id={this.props.id}>
-//         <h2>Challenge {this.props.id}</h2>
-//       </Composed>
-//     );
-//   }
-// }
 
 export default Challenge;
