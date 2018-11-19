@@ -4,6 +4,7 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
 import Error from "../Error";
+import CreateResult from "../CreateResult";
 
 const SINGLE_CHALLENGE_QUERY = gql`
   query SINGLE_CHALLENGE_QUERY($id: ID!) {
@@ -50,6 +51,8 @@ const Challenge = props => (
             <b>{challenge.user.name}</b> vs <b>{challenge.participant.name}</b>
           </p>
           <p>First to <b>{challenge.goal}</b> wins!</p>
+
+          <CreateResult challenge={challenge} />
         </>
       );
     }}

@@ -121,3 +121,4 @@ class ChallengeForm extends Component {
 }
 
 export default ChallengeForm;
+export { InputSpanStyled };
