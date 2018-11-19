@@ -1,119 +1,71 @@
-import React, { Component } from "react";
-import { Mutation } from "react-apollo";
+import React from "react";
+import { adopt } from "react-adopt";
+import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import Router from "next/router";
-import styled from "styled-components";
-
-import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 
-const CREATE_CHALLENGE_MUTATION = gql`
-  mutation CREATE_CHALLENGE_MUTATION(
-    $title: String!
-    $goal: Int!
-    $participantEmail: String!
-  ) {
-    createChallenge(
-      title: $title
-      goal: $goal
-      participantEmail: $participantEmail
-    ) {
+const SINGLE_CHALLENGE_QUERY = gql`
+  query SINGLE_CHALLENGE_QUERY($id: ID!) {
+    challenge(id: $id) {
       id
+      title
+      goal
+      # results {
+      #   id
+      # }
+      user {
+        # id
+        name
+        # email
+      }
+      participant {
+        # id
+        name
+        # email
+      }
     }
   }
 `;
 
-const InputSpanStyled = styled.input`
-  display: inline-block;
-  width: 50px !important;
-  margin: 0 10px;
-`;
+const Composed = adopt({
+  challengeQuery: ({ id, render }) => (
+    <Query query={SINGLE_CHALLENGE_QUERY} variables={{ id }}>
+      {render}
+    </Query>
+  )
+});
 
-class Challenge extends Component {
-  state = {
-    participantEmail: "",
-    title: "",
-    goal: 3
-  };
+const Challenge = props => (
+  <Composed id={props.id}>
+    {({ challengeQuery: { data, error, loading } }) => {
+      if (loading) return <p>Loading...</p>;
 
-  saveToState = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+      if (error) return <Error error={error} />;
 
-  render() {
-    return (
-      <Mutation mutation={CREATE_CHALLENGE_MUTATION} variables={this.state}>
-        {(createChallenge, { error, loading }) => {
-          if (loading) return <p>Loading...</p>;
+      const { challenge } = data;
 
-          return (
-            <FormStyled
-              method="POST"
-              onSubmit={async e => {
-                e.preventDefault();
+      return (
+        <>
+          <h2>{challenge.title}</h2>
+          <p>
+            {challenge.user.name} vs {challenge.participant.name}
+          </p>
+          <p>First to {challenge.goal} wins!</p>
+        </>
+      );
+    }}
+  </Composed>
+);
 
-                const res = await createChallenge();
-
-                this.setState({
-                  participantEmail: "",
-                  title: "",
-                  goal: 3
-                });
-                console.log(res.data);
-
-                // Router.push({
-                //   pathname: "/challenge",
-                //   query: { id: res.data.createChallenge.id }
-                // });
-              }}
-            >
-              <fieldset disabled={loading} aria-busy={loading}>
-                <h2>Challenge a friend</h2>
-
-                <Error error={error} />
-
-                <label htmlFor="participantEmail">
-                  Friend's Email
-                  <input
-                    type="email"
-                    name="participantEmail"
-                    value={this.state.participantEmail}
-                    onChange={this.saveToState}
-                  />
-                </label>
-
-                <label htmlFor="title">
-                  I challenge you to a game of
-                  <input
-                    type="title"
-                    name="title"
-                    value={this.state.title}
-                    onChange={this.saveToState}
-                  />
-                </label>
-
-                <label htmlFor="goal">
-                  Winner is the first to
-                  <InputSpanStyled
-                    type="number"
-                    name="goal"
-                    value={this.state.goal}
-                    onChange={this.saveToState}
-                  />
-                  wins
-                </label>
-
-                <button type="submit">Challenge</button>
-              </fieldset>
-            </FormStyled>
-          );
-        }}
-      </Mutation>
-    );
-  }
-}
+// class Challenge extends React.Component {
+//   render() {
+//     return (
+//       <Composed id={this.props.id}>
+//         <h2>Challenge {this.props.id}</h2>
+//       </Composed>
+//     );
+//   }
+// }
 
 export default Challenge;

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import Challenge from "../components/Challenge";
+import ChallengeForm from "../components/ChallengeForm";
 
 const Columns = styled.div`
   display: grid;
@@ -9,10 +10,18 @@ const Columns = styled.div`
   grid-gap: 20px;
 `;
 
-const ChallengePage = () => {
+const ChallengePage = props => {
+  if (props.query && props.query.id) {
+    return (
+      <Columns>
+        <Challenge id={props.query.id} />
+      </Columns>
+    );
+  }
+
   return (
     <Columns>
-      <Challenge />
+      <ChallengeForm />
     </Columns>
   );
 };

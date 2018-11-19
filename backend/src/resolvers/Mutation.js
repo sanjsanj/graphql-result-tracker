@@ -131,26 +131,21 @@ const Mutation = {
     return updatedUser;
   },
 
-  async createChallenge(parent, args, ctx, info) {
+  async createChallenge(parent, { participantEmail, title, goal }, ctx, info) {
     checkIfLoggedIn(ctx);
 
     const challenger = await ctx.db.query.user({
       where: { id: ctx.request.userId }
     });
 
-    if (!challenger)
-      throw new Error(`Challenger does not exist ${process.env.FRONTEND_URL}`);
+    if (!challenger) throw new Error(`Challenger does not exist`);
 
     const participant = await ctx.db.query.user({
-      where: { email: args.participantEmail }
+      where: { email: participantEmail }
     });
 
     if (!participant)
-      throw new Error(
-        `The person you are challenging does not exist on ${
-          process.env.FRONTEND_URL
-        }`
-      );
+      throw new Error(`${participantEmail} is not a registered user`);
 
     return ctx.db.mutation.createChallenge(
       {
@@ -162,11 +157,11 @@ const Mutation = {
           },
           participant: {
             connect: {
-              email: args.participantEmail
+              email: participantEmail
             }
           },
-          title: args.title,
-          goal: args.goal
+          title,
+          goal
         }
       },
       info

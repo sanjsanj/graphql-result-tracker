@@ -25,9 +25,15 @@ type Mutation {
     confirmPassword: String!
   ): User!
 
-  createChallenge(title: String!, goal: Int!, participantEmail: String!): Challenge!
+  createChallenge(
+    title: String!
+    goal: Int!
+    participantEmail: String!
+  ): Challenge!
 }
 
 type Query {
   me: User
+
+  challenge(id: ID!): Challenge
 }
