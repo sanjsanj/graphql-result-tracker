@@ -7,6 +7,7 @@ import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 import { CURRENT_USER_QUERY } from "../User";
+import { ALL_USER_CHALLENGES_QUERY } from "../../pages";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -35,7 +36,10 @@ class Signin extends Component {
       <Mutation
         mutation={SIGNIN_MUTATION}
         variables={this.state}
-        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+        refetchQueries={[
+          { query: CURRENT_USER_QUERY },
+          { query: ALL_USER_CHALLENGES_QUERY }
+        ]}
       >
         {(signin, { error, loading }) => {
           if (loading) return <p>Loading...</p>;

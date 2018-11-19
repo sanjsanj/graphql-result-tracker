@@ -7,6 +7,7 @@ import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 import { CURRENT_USER_QUERY } from "../User";
+import { ALL_USER_CHALLENGES_QUERY } from "../../pages";
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
@@ -40,7 +41,10 @@ class Signup extends Component {
       <Mutation
         mutation={SIGNUP_MUTATION}
         variables={this.state}
-        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+        refetchQueries={[
+          { query: CURRENT_USER_QUERY },
+          { query: ALL_USER_CHALLENGES_QUERY }
+        ]}
       >
         {(signup, { error, loading }) => {
           if (loading) return <p>Loading...</p>;
