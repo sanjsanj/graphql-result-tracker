@@ -58,6 +58,15 @@ const Challenge = props => (
         result => result.winner.id === challenge.participant.id
       );
 
+      const challengeComplete =
+        userWins.length >= challenge.goal ||
+        participantWins.length >= challenge.goal;
+
+      const winner =
+        userWins > participantWins
+          ? challenge.user.name
+          : challenge.participant.name;
+
       return (
         <>
           <FormStyled>
@@ -80,7 +89,9 @@ const Challenge = props => (
             </p>
           </FormStyled>
 
-          <CreateResult challenge={challenge} />
+          {challengeComplete && <FormStyled>{winner} won!</FormStyled>}
+
+          {!challengeComplete && <CreateResult challenge={challenge} />}
         </>
       );
     }}
