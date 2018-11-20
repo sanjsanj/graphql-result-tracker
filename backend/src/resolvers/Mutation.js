@@ -177,7 +177,7 @@ const Mutation = {
       }
     });
 
-    if (!user) throw new Error("User does not exist")
+    if (!user) throw new Error("User does not exist");
 
     const winner = await ctx.db.query.user({
       where: {
@@ -185,7 +185,7 @@ const Mutation = {
       }
     });
 
-    if (!winner) throw new Error("Winner does not exist")
+    if (!winner) throw new Error("Winner does not exist");
 
     const loser = await ctx.db.query.user({
       where: {
@@ -193,7 +193,7 @@ const Mutation = {
       }
     });
 
-    if (!loser) throw new Error("Loser does not exist")
+    if (!loser) throw new Error("Loser does not exist");
 
     const result = await ctx.db.mutation.createResult(
       {
@@ -208,6 +208,26 @@ const Mutation = {
     );
 
     return result;
+  },
+
+  async deleteResult(parents, { id }, ctx, info) {
+    checkIfLoggedIn(ctx);
+
+    const user = await ctx.db.query.user(
+      { where: { id: ctx.request.userId } },
+      `{ id }`
+    );
+
+    const result = await ctx.db.query.result(
+      { where: { id } },
+      `{ createdBy { id } }`
+    );
+
+    if (user.id !== result.createdBy.id) {
+      throw new Error("You did not create this so you can not delete it");
+    } else {
+      return ctx.db.mutation.deleteResult({ where: { id } }, info);
+    }
   }
 };
 

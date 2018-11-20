@@ -2,14 +2,13 @@ import React from "react";
 import { adopt } from "react-adopt";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import { formatDistance } from "date-fns";
 
 import { BadgeStyled } from "./styles";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 import CreateResult from "../CreateResult";
-import { CURRENT_USER_QUERY } from "../User";
+import UnconfirmedResult from "../UnconfirmedResult";
 
 const SINGLE_CHALLENGE_QUERY = gql`
   query SINGLE_CHALLENGE_QUERY($id: ID!) {
@@ -45,16 +44,12 @@ const Composed = adopt({
     <Query query={SINGLE_CHALLENGE_QUERY} variables={{ id }}>
       {render}
     </Query>
-  ),
-
-  currentUserQuery: ({ id, render }) => (
-    <Query query={CURRENT_USER_QUERY}>{render}</Query>
   )
 });
 
 const Challenge = props => (
   <Composed id={props.id}>
-    {({ challengeQuery: { data, error, loading }, currentUserQuery }) => {
+    {({ challengeQuery: { data, error, loading } }) => {
       if (loading) return <p>Loading...</p>;
 
       if (error) return <Error error={error} />;
@@ -111,28 +106,11 @@ const Challenge = props => (
           <FormStyled>
             <h3>Unconfirmed results</h3>
             {unconfirmedResults.map(result => (
-              <div key={result.id}>
-                {result.createdBy.id === currentUserQuery.data.me.id && (
-                  <p>
-                    You{" "}
-                    {result.winner.id === currentUserQuery.data.me.id
-                      ? "won"
-                      : "lost"}{" "}
-                    {formatDistance(result.createdAt, new Date())} ago
-                    <button>Delete</button>
-                  </p>
-                )}
-                {result.createdBy.id !== currentUserQuery.data.me.id && (
-                  <p>
-                    You{" "}
-                    {result.winner.id === currentUserQuery.data.me.id
-                      ? "won"
-                      : "lost"}{" "}
-                    {formatDistance(result.createdAt, new Date())} ago
-                    <button>Confirm</button>
-                  </p>
-                )}
-              </div>
+              <UnconfirmedResult
+                key={result.id}
+                result={result}
+                challengeId={props.id}
+              />
             ))}
           </FormStyled>
 

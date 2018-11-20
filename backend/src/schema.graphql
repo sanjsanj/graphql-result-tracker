@@ -31,11 +31,9 @@ type Mutation {
     participantEmail: String!
   ): Challenge!
 
-  createResult(
-    challengeId: ID!
-    winnerId: ID!
-    loserId: ID!
-  ): Result!
+  createResult(challengeId: ID!, winnerId: ID!, loserId: ID!): Result!
+
+  deleteResult(id: ID!): Result
 }
 
 type Query {
