@@ -124,21 +124,27 @@ const Challenge = props => (
             </p>
           </FormStyled>
 
-          <FormStyled>
-            <h3>Unconfirmed results</h3>
-            {unconfirmedResults.map(result => (
-              <UnconfirmedResult
-                key={result.id}
-                result={result}
-                challengeId={props.id}
-              />
-            ))}
-          </FormStyled>
+          {!challengeComplete && (
+            <FormStyled>
+              <h3>Unconfirmed results</h3>
+              {unconfirmedResults.map(result => (
+                <UnconfirmedResult
+                  key={result.id}
+                  result={result}
+                  challengeId={props.id}
+                />
+              ))}
+            </FormStyled>
+          )}
 
           {challengeComplete && <FormStyled>{winner.name} won!</FormStyled>}
 
           {!challengeComplete && (
-            <CreateResult challenge={challenge} currentUser={currentUser} otherPerson={otherPerson} />
+            <CreateResult
+              challenge={challenge}
+              currentUser={currentUser}
+              otherPerson={otherPerson}
+            />
           )}
         </>
       );
