@@ -207,7 +207,6 @@ const Mutation = {
       info
     );
 
-    console.log(result);
     return result;
   }
 };

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-const ChallengeStyled = styled.section`
-  background-color: grey;
-  padding: 10px;
-  border-radius: 2px;
+const BadgeStyled = styled.span`
+  background-color: white;
+  border-radius: 3px;
+  padding: 5px;
 `;
 
-export { ChallengeStyled };
+export { BadgeStyled };

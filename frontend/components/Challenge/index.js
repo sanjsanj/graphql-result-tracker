@@ -3,7 +3,8 @@ import { adopt } from "react-adopt";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-import { ChallengeStyled } from "./styles";
+import { BadgeStyled } from "./styles";
+import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 import CreateResult from "../CreateResult";
@@ -14,9 +15,12 @@ const SINGLE_CHALLENGE_QUERY = gql`
       id
       title
       goal
-      # results {
-      #   id
-      # }
+      results {
+        id
+        winner {
+          id
+        }
+      }
       user {
         id
         name
@@ -46,9 +50,17 @@ const Challenge = props => (
 
       const { challenge } = data;
 
+      const userWins = challenge.results.filter(
+        result => result.winner.id === challenge.user.id
+      );
+
+      const participantWins = challenge.results.filter(
+        result => result.winner.id === challenge.participant.id
+      );
+
       return (
         <>
-          <ChallengeStyled>
+          <FormStyled>
             <h2>{challenge.title}</h2>
             <p>
               <b>{challenge.user.name}</b> vs{" "}
@@ -57,7 +69,16 @@ const Challenge = props => (
             <p>
               First to <b>{challenge.goal}</b> wins!
             </p>
-          </ChallengeStyled>
+          </FormStyled>
+
+          <FormStyled>
+            <h3>Score:</h3>
+            <p>
+              {challenge.user.name} <BadgeStyled>{userWins.length}</BadgeStyled>{" "}
+              vs <BadgeStyled>{participantWins.length}</BadgeStyled>{" "}
+              {challenge.participant.name}
+            </p>
+          </FormStyled>
 
           <CreateResult challenge={challenge} />
         </>
