@@ -1,5 +1,5 @@
-# source: https://eu1.prisma.sh/sanjay-purswani-f61b81/result-tracker-backend/dev
-# timestamp: Tue Nov 20 2018 15:27:08 GMT+0000 (Greenwich Mean Time)
+# source: https://result-tracker-b05e382178.herokuapp.com/result-tracker-prod/prod
+# timestamp: Tue Nov 20 2018 20:35:35 GMT+0000 (Greenwich Mean Time)
 
 type AggregateChallenge {
   count: Int!
@@ -109,119 +109,6 @@ type ChallengePreviousValues {
   goal: Int!
 }
 
-input ChallengeScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ChallengeScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ChallengeScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ChallengeScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  title: String
-
-  """All values that are not equal to given value."""
-  title_not: String
-
-  """All values that are contained in given list."""
-  title_in: [String!]
-
-  """All values that are not contained in given list."""
-  title_not_in: [String!]
-
-  """All values less than the given value."""
-  title_lt: String
-
-  """All values less than or equal the given value."""
-  title_lte: String
-
-  """All values greater than the given value."""
-  title_gt: String
-
-  """All values greater than or equal the given value."""
-  title_gte: String
-
-  """All values containing the given string."""
-  title_contains: String
-
-  """All values not containing the given string."""
-  title_not_contains: String
-
-  """All values starting with the given string."""
-  title_starts_with: String
-
-  """All values not starting with the given string."""
-  title_not_starts_with: String
-
-  """All values ending with the given string."""
-  title_ends_with: String
-
-  """All values not ending with the given string."""
-  title_not_ends_with: String
-  goal: Int
-
-  """All values that are not equal to given value."""
-  goal_not: Int
-
-  """All values that are contained in given list."""
-  goal_in: [Int!]
-
-  """All values that are not contained in given list."""
-  goal_not_in: [Int!]
-
-  """All values less than the given value."""
-  goal_lt: Int
-
-  """All values less than or equal the given value."""
-  goal_lte: Int
-
-  """All values greater than the given value."""
-  goal_gt: Int
-
-  """All values greater than or equal the given value."""
-  goal_gte: Int
-}
-
 type ChallengeSubscriptionPayload {
   mutation: MutationType!
   node: Challenge
@@ -269,11 +156,6 @@ input ChallengeUpdateInput {
   results: ResultUpdateManyWithoutChallengeInput
 }
 
-input ChallengeUpdateManyDataInput {
-  title: String
-  goal: Int
-}
-
 input ChallengeUpdateManyMutationInput {
   title: String
   goal: Int
@@ -285,8 +167,6 @@ input ChallengeUpdateManyWithoutParticipantInput {
   disconnect: [ChallengeWhereUniqueInput!]
   delete: [ChallengeWhereUniqueInput!]
   update: [ChallengeUpdateWithWhereUniqueWithoutParticipantInput!]
-  updateMany: [ChallengeUpdateManyWithWhereNestedInput!]
-  deleteMany: [ChallengeScalarWhereInput!]
   upsert: [ChallengeUpsertWithWhereUniqueWithoutParticipantInput!]
 }
 
@@ -296,14 +176,7 @@ input ChallengeUpdateManyWithoutUserInput {
   disconnect: [ChallengeWhereUniqueInput!]
   delete: [ChallengeWhereUniqueInput!]
   update: [ChallengeUpdateWithWhereUniqueWithoutUserInput!]
-  updateMany: [ChallengeUpdateManyWithWhereNestedInput!]
-  deleteMany: [ChallengeScalarWhereInput!]
   upsert: [ChallengeUpsertWithWhereUniqueWithoutUserInput!]
-}
-
-input ChallengeUpdateManyWithWhereNestedInput {
-  where: ChallengeScalarWhereInput!
-  data: ChallengeUpdateManyDataInput!
 }
 
 input ChallengeUpdateOneRequiredWithoutResultsInput {
@@ -623,83 +496,6 @@ type ResultPreviousValues {
   confirmed: Boolean
 }
 
-input ResultScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ResultScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ResultScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ResultScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  confirmed: Boolean
-
-  """All values that are not equal to given value."""
-  confirmed_not: Boolean
-}
-
 type ResultSubscriptionPayload {
   mutation: MutationType!
   node: Result
@@ -747,10 +543,6 @@ input ResultUpdateInput {
   loser: UserUpdateOneRequiredInput
 }
 
-input ResultUpdateManyDataInput {
-  confirmed: Boolean
-}
-
 input ResultUpdateManyMutationInput {
   confirmed: Boolean
 }
@@ -761,14 +553,7 @@ input ResultUpdateManyWithoutChallengeInput {
   disconnect: [ResultWhereUniqueInput!]
   delete: [ResultWhereUniqueInput!]
   update: [ResultUpdateWithWhereUniqueWithoutChallengeInput!]
-  updateMany: [ResultUpdateManyWithWhereNestedInput!]
-  deleteMany: [ResultScalarWhereInput!]
   upsert: [ResultUpsertWithWhereUniqueWithoutChallengeInput!]
-}
-
-input ResultUpdateManyWithWhereNestedInput {
-  where: ResultScalarWhereInput!
-  data: ResultUpdateManyDataInput!
 }
 
 input ResultUpdateWithoutChallengeDataInput {

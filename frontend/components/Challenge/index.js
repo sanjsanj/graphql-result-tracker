@@ -96,11 +96,6 @@ const Challenge = props => (
           ? currentUserQuery.data.me
           : otherPerson;
 
-      const loser =
-        currentUserWins.length > otherPersonWins.length
-          ? otherPerson
-          : currentUserQuery.data.me;
-
       return (
         <>
           <FormStyled>
