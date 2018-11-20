@@ -69,4 +69,42 @@ const NavStyled = styled.nav`
   }
 `;
 
+const UserMessageStyled = styled.div`
+  padding: 1rem 3rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 1em;
+  background: none;
+  border: 0;
+
+  @media (max-width: 700px) {
+    font-size: 10px;
+    padding: 0 10px;
+  }
+
+  &:before {
+    content: "";
+    width: 2px;
+    background: ${props => props.theme.background};
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+
+    &:after {
+      width: calc(100% - 60px);
+    }
+  }
+`;
+
 export default NavStyled;
+export { UserMessageStyled };

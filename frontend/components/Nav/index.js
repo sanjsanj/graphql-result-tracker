@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import NavStyled from "./styles";
+import NavStyled, { UserMessageStyled } from "./styles";
 
 import User from "../User";
 import Signout from "../Signout";
@@ -11,7 +11,7 @@ const Nav = () => (
       <NavStyled>
         {me && (
           <>
-            <div>Hi, {me.name}</div>
+            <UserMessageStyled>Hi, {me.name}</UserMessageStyled>
 
             <Link href="/challenge">
               <a>Challenge a friend</a>
