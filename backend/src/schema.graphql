@@ -34,6 +34,8 @@ type Mutation {
   createResult(challengeId: ID!, winnerId: ID!, loserId: ID!): Result!
 
   deleteResult(id: ID!): Result
+
+  confirmResult(id: ID!): Result
 }
 
 type Query {

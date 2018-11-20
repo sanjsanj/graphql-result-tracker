@@ -1,13 +1,14 @@
 import React from "react";
 import gql from "graphql-tag";
-import styled from "styled-components";
 import { Mutation } from "react-apollo";
+import { adopt } from "react-adopt";
 
 import FormStyled from "../Form/styles";
 import { SelectSpanStyled } from "./styles";
 
 import Error from "../Error";
 import { SINGLE_CHALLENGE_QUERY } from "../Challenge";
+import User from "../User";
 
 const CREATE_RESULT_MUTATION = gql`
   mutation CREATE_RESULT_MUTATION(
@@ -27,20 +28,20 @@ const CREATE_RESULT_MUTATION = gql`
 
 class CreateResult extends React.Component {
   state = {
-    winnerId: this.props.challenge.user.id,
-    loserId: this.props.challenge.participant.id
+    winnerId: this.props.currentUser.id,
+    loserId: this.props.otherPerson.id
   };
 
   handleChange = e => {
     const winnerId =
       e.target.value === "won"
-        ? this.props.challenge.user.id
-        : this.props.challenge.participant.id;
+        ? this.props.currentUser.id
+        : this.props.otherPerson.id;
 
     const loserId =
       e.target.value === "won"
-        ? this.props.challenge.participant.id
-        : this.props.challenge.user.id;
+        ? this.props.otherPerson.id
+        : this.props.currentUser.id;
 
     this.setState({ winnerId, loserId });
   };
@@ -72,6 +73,10 @@ class CreateResult extends React.Component {
               onSubmit={async e => {
                 e.preventDefault();
                 await createResult();
+                this.setState({
+                  winnerId: this.props.currentUser.id,
+                  loserId: this.props.otherPerson.id
+                });
               }}
             >
               <fieldset disabled={loading} aria-busy={loading}>
@@ -79,7 +84,10 @@ class CreateResult extends React.Component {
 
                 <label htmlFor="result-select">
                   I
-                  <SelectSpanStyled id="result-select" onChange={this.handleChange}>
+                  <SelectSpanStyled
+                    id="result-select"
+                    onChange={this.handleChange}
+                  >
                     <option value="won">Won</option>
                     <option value="lost">Lost</option>
                   </SelectSpanStyled>

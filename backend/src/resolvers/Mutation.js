@@ -228,6 +228,29 @@ const Mutation = {
     } else {
       return ctx.db.mutation.deleteResult({ where: { id } }, info);
     }
+  },
+
+  async confirmResult(parents, { id }, ctx, info) {
+    checkIfLoggedIn(ctx);
+
+    const user = await ctx.db.query.user(
+      { where: { id: ctx.request.userId } },
+      `{ id }`
+    );
+
+    const result = await ctx.db.query.result(
+      { where: { id } },
+      `{ createdBy { id } }`
+    );
+
+    if (user.id === result.createdBy.id) {
+      throw new Error("You can not confirm your own result");
+    } else {
+      return ctx.db.mutation.updateResult(
+        { where: { id }, data: { confirmed: true } },
+        info
+      );
+    }
   }
 };
 

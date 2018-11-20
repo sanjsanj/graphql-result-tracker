@@ -9,6 +9,7 @@ import FormStyled from "../Form/styles";
 import Error from "../Error";
 import CreateResult from "../CreateResult";
 import UnconfirmedResult from "../UnconfirmedResult";
+import { CURRENT_USER_QUERY } from "../User";
 
 const SINGLE_CHALLENGE_QUERY = gql`
   query SINGLE_CHALLENGE_QUERY($id: ID!) {
@@ -44,12 +45,16 @@ const Composed = adopt({
     <Query query={SINGLE_CHALLENGE_QUERY} variables={{ id }}>
       {render}
     </Query>
+  ),
+
+  currentUserQuery: ({ render }) => (
+    <Query query={CURRENT_USER_QUERY}>{render}</Query>
   )
 });
 
 const Challenge = props => (
   <Composed id={props.id}>
-    {({ challengeQuery: { data, error, loading } }) => {
+    {({ challengeQuery: { data, error, loading }, currentUserQuery }) => {
       if (loading) return <p>Loading...</p>;
 
       if (error) return <Error error={error} />;
@@ -64,22 +69,37 @@ const Challenge = props => (
         result => result.confirmed
       );
 
-      const userWins = confirmedResults.filter(
-        result => result.winner.id === challenge.user.id
+      const currentUserWins = confirmedResults.filter(
+        result => result.winner.id === currentUserQuery.data.me.id
       );
 
-      const participantWins = confirmedResults.filter(
-        result => result.winner.id === challenge.participant.id
+      const otherPersonWins = confirmedResults.filter(
+        result => result.winner.id !== currentUserQuery.data.me.id
       );
 
       const challengeComplete =
-        userWins.length >= challenge.goal ||
-        participantWins.length >= challenge.goal;
+        currentUserWins.length >= challenge.goal ||
+        otherPersonWins.length >= challenge.goal;
+
+      const currentUser =
+        currentUserQuery.data.me.id === challenge.user.id
+          ? challenge.user
+          : challenge.participant;
+
+      const otherPerson =
+        currentUserQuery.data.me.id === challenge.user.id
+          ? challenge.participant
+          : challenge.user;
 
       const winner =
-        userWins > participantWins
-          ? challenge.user.name
-          : challenge.participant.name;
+        currentUserWins.length > otherPersonWins.length
+          ? currentUserQuery.data.me
+          : otherPerson;
+
+      const loser =
+        currentUserWins.length > otherPersonWins.length
+          ? otherPerson
+          : currentUserQuery.data.me;
 
       return (
         <>
@@ -97,8 +117,9 @@ const Challenge = props => (
           <FormStyled>
             <h3>Score:</h3>
             <p>
-              {challenge.user.name} <BadgeStyled>{userWins.length}</BadgeStyled>{" "}
-              vs <BadgeStyled>{participantWins.length}</BadgeStyled>{" "}
+              {challenge.user.name}{" "}
+              <BadgeStyled>{currentUserWins.length}</BadgeStyled> vs{" "}
+              <BadgeStyled>{otherPersonWins.length}</BadgeStyled>{" "}
               {challenge.participant.name}
             </p>
           </FormStyled>
@@ -114,9 +135,11 @@ const Challenge = props => (
             ))}
           </FormStyled>
 
-          {challengeComplete && <FormStyled>{winner} won!</FormStyled>}
+          {challengeComplete && <FormStyled>{winner.name} won!</FormStyled>}
 
-          {!challengeComplete && <CreateResult challenge={challenge} />}
+          {!challengeComplete && (
+            <CreateResult challenge={challenge} currentUser={currentUser} otherPerson={otherPerson} />
+          )}
         </>
       );
     }}
