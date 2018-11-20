@@ -12,9 +12,11 @@ const ALL_USER_CHALLENGES_QUERY = gql`
       id
       title
       participant {
+        id
         name
       }
       user {
+        id
         name
       }
     }
