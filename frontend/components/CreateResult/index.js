@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Mutation } from "react-apollo";
 
 import FormStyled from "../Form/styles";
+import { SelectSpanStyled } from "./styles";
 
 import Error from "../Error";
 import { SINGLE_CHALLENGE_QUERY } from "../Challenge";
@@ -78,10 +79,10 @@ class CreateResult extends React.Component {
 
                 <label htmlFor="result-select">
                   I
-                  <select id="result-select" onChange={this.handleChange}>
+                  <SelectSpanStyled id="result-select" onChange={this.handleChange}>
                     <option value="won">Won</option>
                     <option value="lost">Lost</option>
-                  </select>
+                  </SelectSpanStyled>
                   against {this.props.challenge.participant.name}
                 </label>
 

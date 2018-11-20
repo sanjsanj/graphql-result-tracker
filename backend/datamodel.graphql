@@ -25,4 +25,5 @@ type Result {
   createdAt: DateTime!
   winner: User! @relation(name: "Winner")
   loser: User! @relation(name: "Loser")
+  confirmed: Boolean @default(value: false)
 }

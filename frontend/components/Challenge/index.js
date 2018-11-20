@@ -2,12 +2,14 @@ import React from "react";
 import { adopt } from "react-adopt";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { formatDistance } from "date-fns";
 
 import { BadgeStyled } from "./styles";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
 import CreateResult from "../CreateResult";
+import { CURRENT_USER_QUERY } from "../User";
 
 const SINGLE_CHALLENGE_QUERY = gql`
   query SINGLE_CHALLENGE_QUERY($id: ID!) {
@@ -17,6 +19,11 @@ const SINGLE_CHALLENGE_QUERY = gql`
       goal
       results {
         id
+        confirmed
+        createdAt
+        createdBy {
+          id
+        }
         winner {
           id
         }
@@ -38,23 +45,35 @@ const Composed = adopt({
     <Query query={SINGLE_CHALLENGE_QUERY} variables={{ id }}>
       {render}
     </Query>
+  ),
+
+  currentUserQuery: ({ id, render }) => (
+    <Query query={CURRENT_USER_QUERY}>{render}</Query>
   )
 });
 
 const Challenge = props => (
   <Composed id={props.id}>
-    {({ challengeQuery: { data, error, loading } }) => {
+    {({ challengeQuery: { data, error, loading }, currentUserQuery }) => {
       if (loading) return <p>Loading...</p>;
 
       if (error) return <Error error={error} />;
 
       const { challenge } = data;
 
-      const userWins = challenge.results.filter(
+      const unconfirmedResults = challenge.results.filter(
+        result => !result.confirmed
+      );
+
+      const confirmedResults = challenge.results.filter(
+        result => result.confirmed
+      );
+
+      const userWins = confirmedResults.filter(
         result => result.winner.id === challenge.user.id
       );
 
-      const participantWins = challenge.results.filter(
+      const participantWins = confirmedResults.filter(
         result => result.winner.id === challenge.participant.id
       );
 
@@ -87,6 +106,34 @@ const Challenge = props => (
               vs <BadgeStyled>{participantWins.length}</BadgeStyled>{" "}
               {challenge.participant.name}
             </p>
+          </FormStyled>
+
+          <FormStyled>
+            <h3>Unconfirmed results</h3>
+            {unconfirmedResults.map(result => (
+              <div key={result.id}>
+                {result.createdBy.id === currentUserQuery.data.me.id && (
+                  <p>
+                    You{" "}
+                    {result.winner.id === currentUserQuery.data.me.id
+                      ? "won"
+                      : "lost"}{" "}
+                    {formatDistance(result.createdAt, new Date())} ago
+                    <button>Delete</button>
+                  </p>
+                )}
+                {result.createdBy.id !== currentUserQuery.data.me.id && (
+                  <p>
+                    You{" "}
+                    {result.winner.id === currentUserQuery.data.me.id
+                      ? "won"
+                      : "lost"}{" "}
+                    {formatDistance(result.createdAt, new Date())} ago
+                    <button>Confirm</button>
+                  </p>
+                )}
+              </div>
+            ))}
           </FormStyled>
 
           {challengeComplete && <FormStyled>{winner} won!</FormStyled>}

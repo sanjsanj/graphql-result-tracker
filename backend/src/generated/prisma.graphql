@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/sanjay-purswani-f61b81/result-tracker-backend/dev
-# timestamp: Mon Nov 19 2018 18:12:13 GMT+0000 (Greenwich Mean Time)
+# timestamp: Tue Nov 20 2018 15:27:08 GMT+0000 (Greenwich Mean Time)
 
 type AggregateChallenge {
   count: Int!
@@ -505,6 +505,7 @@ type Mutation {
   upsertResult(where: ResultWhereUniqueInput!, create: ResultCreateInput!, update: ResultUpdateInput!): Result!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyChallenges(data: ChallengeUpdateManyMutationInput!, where: ChallengeWhereInput): BatchPayload!
+  updateManyResults(data: ResultUpdateManyMutationInput!, where: ResultWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyChallenges(where: ChallengeWhereInput): BatchPayload!
   deleteManyResults(where: ResultWhereInput): BatchPayload!
@@ -563,6 +564,7 @@ type Result implements Node {
   createdAt: DateTime!
   winner: User!
   loser: User!
+  confirmed: Boolean
 }
 
 """A connection to a list of items."""
@@ -576,6 +578,7 @@ type ResultConnection {
 }
 
 input ResultCreateInput {
+  confirmed: Boolean
   challenge: ChallengeCreateOneWithoutResultsInput!
   createdBy: UserCreateOneInput!
   winner: UserCreateOneInput!
@@ -588,6 +591,7 @@ input ResultCreateManyWithoutChallengeInput {
 }
 
 input ResultCreateWithoutChallengeInput {
+  confirmed: Boolean
   createdBy: UserCreateOneInput!
   winner: UserCreateOneInput!
   loser: UserCreateOneInput!
@@ -607,6 +611,8 @@ enum ResultOrderByInput {
   id_DESC
   createdAt_ASC
   createdAt_DESC
+  confirmed_ASC
+  confirmed_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -614,6 +620,7 @@ enum ResultOrderByInput {
 type ResultPreviousValues {
   id: ID!
   createdAt: DateTime!
+  confirmed: Boolean
 }
 
 input ResultScalarWhereInput {
@@ -687,6 +694,10 @@ input ResultScalarWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  confirmed: Boolean
+
+  """All values that are not equal to given value."""
+  confirmed_not: Boolean
 }
 
 type ResultSubscriptionPayload {
@@ -729,10 +740,19 @@ input ResultSubscriptionWhereInput {
 }
 
 input ResultUpdateInput {
+  confirmed: Boolean
   challenge: ChallengeUpdateOneRequiredWithoutResultsInput
   createdBy: UserUpdateOneRequiredInput
   winner: UserUpdateOneRequiredInput
   loser: UserUpdateOneRequiredInput
+}
+
+input ResultUpdateManyDataInput {
+  confirmed: Boolean
+}
+
+input ResultUpdateManyMutationInput {
+  confirmed: Boolean
 }
 
 input ResultUpdateManyWithoutChallengeInput {
@@ -741,11 +761,18 @@ input ResultUpdateManyWithoutChallengeInput {
   disconnect: [ResultWhereUniqueInput!]
   delete: [ResultWhereUniqueInput!]
   update: [ResultUpdateWithWhereUniqueWithoutChallengeInput!]
+  updateMany: [ResultUpdateManyWithWhereNestedInput!]
   deleteMany: [ResultScalarWhereInput!]
   upsert: [ResultUpsertWithWhereUniqueWithoutChallengeInput!]
 }
 
+input ResultUpdateManyWithWhereNestedInput {
+  where: ResultScalarWhereInput!
+  data: ResultUpdateManyDataInput!
+}
+
 input ResultUpdateWithoutChallengeDataInput {
+  confirmed: Boolean
   createdBy: UserUpdateOneRequiredInput
   winner: UserUpdateOneRequiredInput
   loser: UserUpdateOneRequiredInput
@@ -833,6 +860,10 @@ input ResultWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  confirmed: Boolean
+
+  """All values that are not equal to given value."""
+  confirmed_not: Boolean
   challenge: ChallengeWhereInput
   createdBy: UserWhereInput
   winner: UserWhereInput
