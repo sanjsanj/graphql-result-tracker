@@ -99,3 +99,4 @@ const Challenge = props => (
 );
 
 export default Challenge;
+export { SINGLE_CHALLENGE_QUERY };

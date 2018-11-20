@@ -6,6 +6,7 @@ import { Mutation } from "react-apollo";
 import FormStyled from "../Form/styles";
 
 import Error from "../Error";
+import { SINGLE_CHALLENGE_QUERY } from "../Challenge";
 
 const CREATE_RESULT_MUTATION = gql`
   mutation CREATE_RESULT_MUTATION(
@@ -52,6 +53,12 @@ class CreateResult extends React.Component {
           winnerId: this.state.winnerId,
           loserId: this.state.loserId
         }}
+        refetchQueries={[
+          {
+            query: SINGLE_CHALLENGE_QUERY,
+            variables: { id: this.props.challenge.id }
+          }
+        ]}
       >
         {(createResult, { error, loading }) => {
           if (loading) return <p>Loading...</p>;
