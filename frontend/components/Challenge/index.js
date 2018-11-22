@@ -67,18 +67,6 @@ const Challenge = props => (
         result => result.confirmed
       );
 
-      const currentUserWins = confirmedResults.filter(
-        result => result.winner.id === currentUserQuery.data.me.id
-      );
-
-      const otherPersonWins = confirmedResults.filter(
-        result => result.winner.id !== currentUserQuery.data.me.id
-      );
-
-      const challengeComplete =
-        currentUserWins.length >= challenge.goal ||
-        otherPersonWins.length >= challenge.goal;
-
       const currentUser =
         currentUserQuery.data.me.id === challenge.user.id
           ? challenge.user
@@ -89,9 +77,21 @@ const Challenge = props => (
           ? challenge.participant
           : challenge.user;
 
+      const currentUserWins = confirmedResults.filter(
+        result => result.winner.id === currentUser.id
+      );
+
+      const otherPersonWins = confirmedResults.filter(
+        result => result.winner.id === otherPerson.id
+      );
+
+      const challengeComplete =
+        currentUserWins.length >= challenge.goal ||
+        otherPersonWins.length >= challenge.goal;
+
       const winner =
         currentUserWins.length > otherPersonWins.length
-          ? currentUserQuery.data.me
+          ? currentUser
           : otherPerson;
 
       return (
