@@ -29,7 +29,6 @@ const Composed = adopt({
       {render}
     </Query>
   ),
-
   deleteResultMutation: ({ id, challengeId, render }) => (
     <Mutation
       mutation={DELETE_RESULT_MUTATION}
@@ -41,7 +40,6 @@ const Composed = adopt({
       {render}
     </Mutation>
   ),
-
   confirmResultMutation: ({ id, challengeId, render }) => (
     <Mutation
       mutation={CONFIRM_RESULT_MUTATION}
@@ -59,51 +57,37 @@ const UnconfirmedResult = ({ result, challengeId }) => {
   return (
     <Composed id={result.id} challengeId={challengeId}>
       {({ currentUserQuery, deleteResultMutation, confirmResultMutation }) => {
+        const deleteOrConfirm =
+          result.createdBy.id === currentUserQuery.data.me.id
+            ? "Delete"
+            : "Confirm";
+
+        const deleteOrConfirmFunc =
+          result.createdBy.id === currentUserQuery.data.me.id
+            ? deleteResultMutation
+            : confirmResultMutation;
+
+        const wonOrLost =
+          result.winner.id === currentUserQuery.data.me.id ? "won" : "lost";
+
         return (
-          <div>
-            {result.createdBy.id === currentUserQuery.data.me.id && (
-              <p>
-                You{" "}
-                {result.winner.id === currentUserQuery.data.me.id
-                  ? "won"
-                  : "lost"}{" "}
-                {formatDistance(result.createdAt, new Date())} ago
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm("Are you sure you want to DELETE this?")) {
-                      deleteResultMutation().catch(error =>
-                        alert(error.message)
-                      );
-                    }
-                  }}
-                >
-                  Delete
-                </button>
-              </p>
-            )}
-            {result.createdBy.id !== currentUserQuery.data.me.id && (
-              <p>
-                You{" "}
-                {result.winner.id === currentUserQuery.data.me.id
-                  ? "won"
-                  : "lost"}{" "}
-                {formatDistance(result.createdAt, new Date())} ago
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm("Are you sure you want to CONFIRM this?")) {
-                      confirmResultMutation().catch(error =>
-                        alert(error.message)
-                      );
-                    }
-                  }}
-                >
-                  Confirm
-                </button>
-              </p>
-            )}
-          </div>
+          <p>
+            You {wonOrLost} {formatDistance(result.createdAt, new Date())} ago
+            <button
+              type="button"
+              onClick={() => {
+                if (
+                  confirm(
+                    `Are you sure you want to ${deleteOrConfirm.toUpperCase()} this?`
+                  )
+                ) {
+                  deleteOrConfirmFunc().catch(error => alert(error.message));
+                }
+              }}
+            >
+              {deleteOrConfirm}
+            </button>
+          </p>
         );
       }}
     </Composed>

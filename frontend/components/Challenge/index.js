@@ -46,7 +46,6 @@ const Composed = adopt({
       {render}
     </Query>
   ),
-
   currentUserQuery: ({ render }) => (
     <Query query={CURRENT_USER_QUERY}>{render}</Query>
   )
@@ -56,7 +55,6 @@ const Challenge = props => (
   <Composed id={props.id}>
     {({ challengeQuery: { data, error, loading }, currentUserQuery }) => {
       if (loading) return <p>Loading...</p>;
-
       if (error) return <Error error={error} />;
 
       const { challenge } = data;
