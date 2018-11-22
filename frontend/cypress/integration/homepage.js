@@ -1,4 +1,8 @@
 describe("Given I visit the Homepage", () => {
+  beforeEach(() => {
+    Cypress.Cookies.preserveOnce("token");
+  });
+
   describe("When not signed in", () => {
     beforeEach(() => {
       cy.visit("/");
@@ -31,6 +35,12 @@ describe("Given I visit the Homepage", () => {
       cy.contains("Hi, Billy Bob");
       cy.contains("Challenge a friend");
       cy.contains("Sign out");
+      cy.get(":nth-child(1) > a");
+    });
+
+    it("Should let me click on a teaser and see the full challenge", () => {
+      cy.get(":nth-child(1) > a > h3").click();
+      expect(true).to.eq(true);
     });
   });
 });
