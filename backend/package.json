@@ -8,8 +8,7 @@
     "test": "jest",
     "deploy": "prisma deploy && graphql get-schema -p prisma",
     "heroku:logs": "heroku logs --tail --app result-tracker",
-    "push:backend": "git push backend master",
-    "push:frontend": "git push frontend master"
+    "prisma:seed": "prisma reset -f && prisma seed"
   },
   "dependencies": {
     "babel-preset-env": "^1.7.0",

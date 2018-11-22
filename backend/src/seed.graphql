@@ -1,0 +1,37 @@
+mutation {
+  CREATE_BOB: createUser(
+    data: { email: "a@a.com", name: "Billy Bob", password: "asdasd" }
+  ) {
+    id
+  }
+
+  CREATE_SUE: createUser(
+    data: { email: "b@b.com", name: "Susie Sue", password: "asdasd" }
+  ) {
+    id
+  }
+
+  CREATE_CHUCK: createUser(
+    data: { email: "c@c.com", name: "Chuck E. Cheese", password: "asdasd" }
+  ) {
+    id
+  }
+
+  CREATE_CHALLENGE: createChallenge(
+    data: {
+      title: "Test Challenge"
+      goal: 3
+      user: { connect: { email: "a@a.com" } }
+      participant: { connect: { email: "b@b.com" } }
+      results: {
+        create: {
+          createdBy: { connect: { email: "a@a.com" } }
+          winner: { connect: { email: "a@a.com" } }
+          loser: { connect: { email: "b@b.com" } }
+        }
+      }
+    }
+  ) {
+    id
+  }
+}
