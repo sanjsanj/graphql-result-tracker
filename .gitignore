@@ -64,3 +64,4 @@ typings/
 # custom
 server/config/config.json
 .DS_Store
+**/integration/examples
