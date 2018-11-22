@@ -1,34 +1,57 @@
 mutation {
   CREATE_BOB: createUser(
-    data: { email: "a@a.com", name: "Billy Bob", password: "asdasd" }
+    data: {
+      email: "a@a.com"
+      name: "Billy Bob"
+      password: "$2a$10$loULtJGAWZsnF/mVmo4jK.V.vK2AeHuY8pzST1VkYjZrg5wRPewjO" #bcrypt.hash('asdasd', 10)
+    }
   ) {
     id
   }
 
   CREATE_SUE: createUser(
-    data: { email: "b@b.com", name: "Susie Sue", password: "asdasd" }
+    data: {
+      email: "b@b.com"
+      name: "Susie Sue"
+      password: "$2a$10$loULtJGAWZsnF/mVmo4jK.V.vK2AeHuY8pzST1VkYjZrg5wRPewjO" #bcrypt.hash('asdasd', 10)
+    }
   ) {
     id
   }
 
   CREATE_CHUCK: createUser(
-    data: { email: "c@c.com", name: "Chuck E. Cheese", password: "asdasd" }
+    data: {
+      email: "c@c.com"
+      name: "Chuck E. Cheese"
+      password: "$2a$10$loULtJGAWZsnF/mVmo4jK.V.vK2AeHuY8pzST1VkYjZrg5wRPewjO" #bcrypt.hash('asdasd', 10)
+    }
   ) {
     id
   }
 
   CREATE_CHALLENGE: createChallenge(
+    # Test Challenge: Bob vs Sue: First to 3 wins
+    # Bob has submitted 2 wins
+    # Sue has confirmed 1
     data: {
       title: "Test Challenge"
       goal: 3
       user: { connect: { email: "a@a.com" } }
       participant: { connect: { email: "b@b.com" } }
       results: {
-        create: {
-          createdBy: { connect: { email: "a@a.com" } }
-          winner: { connect: { email: "a@a.com" } }
-          loser: { connect: { email: "b@b.com" } }
-        }
+        create: [
+          {
+            createdBy: { connect: { email: "a@a.com" } }
+            winner: { connect: { email: "a@a.com" } }
+            loser: { connect: { email: "b@b.com" } }
+          }
+          {
+            confirmed: true
+            createdBy: { connect: { email: "a@a.com" } }
+            winner: { connect: { email: "a@a.com" } }
+            loser: { connect: { email: "b@b.com" } }
+          }
+        ]
       }
     }
   ) {
