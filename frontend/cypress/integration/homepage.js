@@ -39,12 +39,31 @@ describe("Given I visit the Homepage", () => {
     });
 
     it("Should let me click on a teaser and see the full challenge", () => {
+      cy.visit("/");
       cy.get(":nth-child(1) > a > h3").click();
-      expect(true).to.eq(true);
+      cy.contains("Test Challenge");
+      cy.contains("Billy Bob vs Susie Sue");
+      cy.contains("First to 3 wins!");
+    });
+
+    it("Should let me submit a result", () => {
+      cy.visit("/");
+      cy.get(":nth-child(1) > a > h3").click();
+      cy.get(".unconfirmed-results > p").should("not.exist");
+      cy.get("fieldset > button").click();
+      cy.get(".unconfirmed-results > p").should("exist");
+    });
+
+    it("Should let me delete a result", () => {
+      cy.visit("/");
+      cy.get(":nth-child(1) > a > h3").click();
+      cy.get(".unconfirmed-results > p").should("exist");
+      cy.get("p > button").click();
+      cy.get(".unconfirmed-results > p").should("not.exist");
     });
 
     after(() => {
-      cy.get("button").click();
+      cy.get("nav > button").click();
     });
   });
 
@@ -73,7 +92,6 @@ describe("Given I visit the Homepage", () => {
 
     it("Should not show me Bob and Sue's challenge teaser", () => {
       cy.get(":nth-child(1) > a > h3").should("not.exist");
-      expect(true).to.eq(true);
     });
   });
 });

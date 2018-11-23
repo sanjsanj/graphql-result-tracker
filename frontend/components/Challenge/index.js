@@ -118,7 +118,7 @@ const Challenge = props => (
           </FormStyled>
 
           {!challengeComplete && (
-            <FormStyled>
+            <FormStyled className="unconfirmed-results">
               <h3>Unconfirmed results</h3>
               {unconfirmedResults.map(result => (
                 <UnconfirmedResult
